@@ -1,8 +1,14 @@
 import psycopg2
+import pandas as pd
 from psycopg2.extras import RealDictCursor
 from flask import Flask, redirect, url_for, request
 app = Flask(__name__)
 
+conn = psycopg2.connect(database="accounts_db",
+                        host="localhost",
+                        user="john",
+                        password="password",
+                        port="5432")
 
 cursor = conn.cursor(cursor_factory=RealDictCursor)
 
@@ -45,14 +51,15 @@ def bypass_df_merged1(email):
    cursor.execute(query,values)
    return ''
 
-
 @app.route('/update/newaccounts/<email>',methods = ['PUT'])
 def newaccounts1(email):
    x = request.json
-   values = (x['Email'],x['Platform'],x['Type'],x['Parent_Card'],x['Card_Number'],x['Expiration'],x['CVV'],x['CREATED_BY'],x['ADDRESS'],x['CITY'],x['STATE'],x['Zip_Code'],x['Phone'],x['CARD_ADDED_INTO_TICKETS.COM'])
-   query = "UPDATE newaccounts SET Email='%s',Platform='%s',Type='%s',Parent_Card='%s',Card_Number='%s',Expiration='%s',CVV='%s',CREATED_BY='%s',ADDRESS='%s',CITY='%s',STATE='%s',Zip_Code='%s',Phone='%s',CARD_ADDED_INTO_TICKETSCOM='%s' WHERE email='"+email+"'"
-   cursor.execute(query,values)
-   return ''
+   df = pd.DataFrame(x)
+   print(df)
+   # values = (x['Email'],x['Platform'],x['Type'],x['Parent_Card'],x['Card_Number'],x['Expiration'],x['CVV'],x['CREATED_BY'],x['ADDRESS'],x['CITY'],x['STATE'],x['Zip_Code'],x['Phone'],x['CARD_ADDED_INTO_TICKETS.COM'])
+   # query = "UPDATE newaccounts SET Email='%s',Platform='%s',Type='%s',Parent_Card='%s',Card_Number='%s',Expiration='%s',CVV='%s',CREATED_BY='%s',ADDRESS='%s',CITY='%s',STATE='%s',Zip_Code='%s',Phone='%s',CARD_ADDED_INTO_TICKETSCOM='%s' WHERE email='"+email+"'"
+   # cursor.execute(query,values)
+   return df
 
 
 
