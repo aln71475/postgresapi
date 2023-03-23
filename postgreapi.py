@@ -2,6 +2,7 @@ import psycopg2
 import pandas as pd
 from psycopg2.extras import RealDictCursor
 from flask import Flask, redirect, url_for, request
+from postgres_load import readdb
 app = Flask(__name__)
 
 conn = psycopg2.connect(database="accounts_db",
@@ -53,6 +54,7 @@ def bypass_df_merged1(email):
 
 @app.route('/update/newaccounts/<email>',methods = ['PUT'])
 def newaccounts1(email):
+   maindf = readdb()
    x = request.json
    df = pd.DataFrame(x)
    print(df)
